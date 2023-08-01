@@ -1,0 +1,40 @@
+service: Xpandit-BE-dev
+
+useDotenv: true
+
+plugins:
+  - serverless-plugin-optimize
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ap-southeast-1
+  environment:
+    JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
+    EXPIRES_TIME: ${env:EXPIRES_TIME}
+
+    MY_AWS_REGION: ${env:MY_AWS_REGION}
+    MY_AWS_ACCESS_KEY_ID: ${env:MY_AWS_ACCESS_KEY_ID}
+    MY_AWS_SECRET_ACCESS_KEY: ${env:MY_AWS_SECRET_ACCESS_KEY}
+    MY_AWS_IMAGE_BUCKET_NAME: ${env:MY_AWS_IMAGE_BUCKET_NAME}
+    
+    DB_CLUSTER_PASSWORD: ${env:DB_CLUSTER_PASSWORD}
+    DB_ACCESS_PASSWORD: ${env:DB_ACCESS_PASSWORD}
+    DB_AUTH_PASSWORD: ${env:DB_AUTH_PASSWORD}
+    DB_ADDRESS_URL: ${env:DB_ADDRESS_URL}
+  
+functions:
+  main:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+  optimize:
+    external: ['swagger-ui-dist']
